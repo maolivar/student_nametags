@@ -93,24 +93,26 @@ def _split_line(
 
         if order == "last_first":
             apellido_parts = _parts_from_front(left_tokens,  num_apellido_words, triggers)
-            nombre_parts   = _parts_from_front(right_tokens, num_nombre_words,   [])
+            nombre_parts   = _parts_from_front(right_tokens, num_nombre_words,   triggers)
         else:
-            nombre_parts   = _parts_from_front(left_tokens,  num_nombre_words,   [])
+            nombre_parts   = _parts_from_front(left_tokens,  num_nombre_words,   triggers)
             apellido_parts = _parts_from_front(right_tokens, num_apellido_words, triggers)
 
     else:
-        # Fallback: consume from both ends
+        # Fallback: consume from the apellido end first, then from the nombre end.
+        # Both use _consume_parts_from_front on the remaining tokens so that
+        # composite triggers are honoured for both last names and first names.
         all_tokens = re.split(r"\s+", line)
         if order == "last_first":
             apellido_parts, remaining = _consume_parts_from_front(
                 all_tokens, num_apellido_words, triggers
             )
-            nombre_parts = _parts_from_back(remaining, num_nombre_words)
+            nombre_parts = _parts_from_front(remaining, num_nombre_words, triggers)
         else:
             nombre_parts, remaining = _consume_parts_from_front(
-                all_tokens, num_nombre_words, []
+                all_tokens, num_nombre_words, triggers
             )
-            apellido_parts = _parts_from_back(remaining, num_apellido_words)
+            apellido_parts = _parts_from_front(remaining, num_apellido_words, triggers)
 
     return apellido_parts, nombre_parts
 

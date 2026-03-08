@@ -98,8 +98,9 @@ with tab1:
             "Composite last-name triggers (comma-separated)",
             value="DE, DEL, DE LA, DE LOS, DE LAS, VAN, VON",
             help=(
-                "Words that signal a multi-word apellido. "
-                "Example: 'DE LA' causes 'DE LA TORRE' to be treated as one last-name part."
+                "Words that signal a multi-word name or apellido. "
+                "Applied to both last-name and first-name parsing. "
+                "Example: 'DE LA' causes 'DE LA TORRE' to be treated as one part."
             ),
         )
         composite_triggers = [t.strip() for t in triggers_raw.split(",") if t.strip()]
